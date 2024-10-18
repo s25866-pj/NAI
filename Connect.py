@@ -64,7 +64,18 @@ def checkGame():
                     tablica[wiersz][kolumna + 3] == gracz):
                     endGame = True
                     return gracz  
-        
+    
+    #zwyciestwo skos prawo
+    for kolumna in range(kolumny - 3):
+        for wiersz in range(3, wiersze):  
+            gracz = tablica[wiersz][kolumna]
+            if gracz != 0:
+                if (tablica[wiersz - 1][kolumna + 1] == gracz and
+                    tablica[wiersz - 2][kolumna + 2] == gracz and
+                    tablica[wiersz - 3][kolumna + 3] == gracz):
+                    endGame = True
+                    return gracz  
+
     return 0
 
 showGame()
