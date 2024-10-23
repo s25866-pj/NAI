@@ -1,46 +1,36 @@
 import numpy as np
 import sys
-
+#TODO Pełna dokumentacja
 from easyAI import TwoPlayerGame
 
 RED = '\033[31m'
 GREEN = '\033[32m'
 YELLOW = '\033[33m'
 RESET = '\033[0m'
-wiersze = 6
-kolumny = 7
+rows = 6
+columns = 7
 playerturn = True
 endGame = False
-tablica = [[0 for _ in range(kolumny)] for _ in range(wiersze)]
+board = [[0 for _ in range(columns)] for _ in range(rows)]
 
 class ConnectGame(TwoPlayerGame):
     
     def __init__(self, players):
         self.players = players
         self.current_player = 1
-        # self.board = np.array([[0 for i in range(7)] for j in range(6)])
-
     def possible_moves(self):
-        # print(f"DOKUMENTACJA TABLICA")
-        # xd = [i for i in range(7) if (self.board[:, i].min() == 0)]
-        # print(f"{xd}")
-        # test = [i for i in range(wiersze) if (tablica[i] == 0)]
         # TODO Sprawdzić w naszej tablicy, czy dla danej kolumny możena wstawić żeton. Obecny for działa źle.
-        test = []
-        for wiersz in range(wiersze):
-            for kolumna in range(kolumny):
-                if (tablica[wiersz][kolumna] == 0):
-                    test.append(wiersz)
-                    break
-        # print(f"NASZA TABLICA:")
-        print(f"{test}")
-        return test
-
-    def make_move(self, kolumna):
+        freeColumns = []
+        for column in range(columns):
+            if(board[0][column])== 0:
+                freeColumns.append(column)
+        print(freeColumns)
+        return freeColumns
+    def make_move(self, column):
         #TODO Wykonanie akcji zagrania żetona (może działa)
-        for wiersz in range(wiersze - 1, -1, -1):
-            if tablica[wiersz][kolumna] == 0:
-                tablica[wiersz][kolumna] = self.current_player 
+        for row in range(rows - 1, -1, -1):
+            if board[row][column] == 0:
+                board[row][column] = self.current_player
                 break
         # line = np.argmin(tablica[:, column] != 0)
         # tablica[line, column] = self.player
@@ -59,133 +49,49 @@ class ConnectGame(TwoPlayerGame):
         
 
 def showGame():
-    for wiersz in tablica:
-        print(wiersz)
+    for row in board:
+        print(row)
     print("\n")
 
-# def isFull(kolumna):
-#     return tablica[0][kolumna] > 0
-
-# def addToken():
-#     while True:
-#         try:
-#             kolumna = int(input("Podaj kolumnę, do której chcesz dodać żeton: "))
-#         except ValueError:
-#             print("Niepoprawny numer kolumny, spróbuj ponownie.")
-#             continue
-
-#         if 0 <= kolumna < kolumny:
-#             if playerturn:
-#                 gracz = 1
-#             else:
-#                 gracz = 2
-
-#             if isFull(kolumna):
-#                 print("Nie możesz dodać tokenu, kolumna jest pełna.")
-#             else:
-#                 for wiersz in range(wiersze - 1, -1, -1):
-#                     if tablica[wiersz][kolumna] == 0:
-#                         tablica[wiersz][kolumna] = gracz
-#                         return
-#         else:
-#             print("Niepoprawny numer kolumny, spróbuj ponownie.")
-
-def get_winner(gracz):
+def get_winner(player):
 
      # Sprawdzanie pionowe
-    for wiersz in range(wiersze - 3):
-        for kolumna in range(kolumny):
-            gracz = tablica[wiersz][kolumna]
-            if gracz != 0 and all(tablica[wiersz + i][kolumna] == gracz for i in range(4)):
-                return gracz
+    for row in range(rows - 3):
+        for kolumna in range(columns):
+            player = board[row][kolumna]
+            if player != 0 and all(board[row + i][kolumna] == player for i in range(4)):
+                return player
 
     # Sprawdzanie poziome
-    for wiersz in range(wiersze):
-        for kolumna in range(kolumny - 3):
-            gracz = tablica[wiersz][kolumna]
-            if gracz != 0 and all(tablica[wiersz][kolumna + i] == gracz for i in range(4)):
-                return gracz
+    for row in range(rows):
+        for kolumna in range(columns - 3):
+            player = board[row][kolumna]
+            if player != 0 and all(board[row][kolumna + i] == player for i in range(4)):
+                return player
 
     # Sprawdzanie ukośne (z lewej do prawej, w dół)
-    for wiersz in range(wiersze - 3):
-        for kolumna in range(kolumny - 3):
-            gracz = tablica[wiersz][kolumna]
-            if gracz != 0 and all(tablica[wiersz + i][kolumna + i] == gracz for i in range(4)):
-                return gracz
+    for row in range(rows - 3):
+        for kolumna in range(columns - 3):
+            player = board[row][kolumna]
+            if player != 0 and all(board[row + i][kolumna + i] == player for i in range(4)):
+                return player
 
     # Sprawdzanie ukośne (z prawej do lewej, w dół)
-    for wiersz in range(wiersze - 3):
-        for kolumna in range(3, kolumny):
-            gracz = tablica[wiersz][kolumna]
-            if gracz != 0 and all(tablica[wiersz + i][kolumna - i] == gracz for i in range(4)):
-                return gracz
+    for row in range(rows - 3):
+        for kolumna in range(3, columns):
+            player = board[row][kolumna]
+            if player != 0 and all(board[row + i][kolumna - i] == player for i in range(4)):
+                return player
     
     return 0
 
 def is_draw():
-    zeros = sum(tablica[wiersz][kolumna] == 0 for wiersz in range(wiersze) for kolumna in range(kolumny))
+    zeros = sum(board[wiersz][kolumna] == 0 for wiersz in range(rows) for kolumna in range(columns))
     if zeros == 0:
         print(f"{YELLOW}Remis{RESET}")
         return True
     
     return False
-
-# def checkGame(gracz):
-#     global endGame
-
-#     # Sprawdzanie pionowe
-#     for wiersz in range(wiersze - 3):
-#         for kolumna in range(kolumny):
-#             gracz = tablica[wiersz][kolumna]
-#             if gracz != 0 and all(tablica[wiersz + i][kolumna] == gracz for i in range(4)):
-#                 endGame = True
-#                 return
-
-#     # Sprawdzanie poziome
-#     for wiersz in range(wiersze):
-#         for kolumna in range(kolumny - 3):
-#             gracz = tablica[wiersz][kolumna]
-#             if gracz != 0 and all(tablica[wiersz][kolumna + i] == gracz for i in range(4)):
-#                 endGame = True
-#                 return
-
-#     # Sprawdzanie ukośne (z lewej do prawej, w dół)
-#     for wiersz in range(wiersze - 3):
-#         for kolumna in range(kolumny - 3):
-#             gracz = tablica[wiersz][kolumna]
-#             if gracz != 0 and all(tablica[wiersz + i][kolumna + i] == gracz for i in range(4)):
-#                 endGame = True
-#                 return
-
-#     # Sprawdzanie ukośne (z prawej do lewej, w dół)
-#     for wiersz in range(wiersze - 3):
-#         for kolumna in range(3, kolumny):
-#             gracz = tablica[wiersz][kolumna]
-#             if gracz != 0 and all(tablica[wiersz + i][kolumna - i] == gracz for i in range(4)):
-#                 endGame = True
-#                 return
-
-#     # Sprawdzenie, czy nie ma więcej miejsca na planszy (remis)
-#     zeros = sum(tablica[wiersz][kolumna] == 0 for wiersz in range(wiersze) for kolumna in range(kolumny))
-#     if zeros == 0:
-#         print(f"{YELLOW}Remis{RESET}")
-#         sys.exit(0)
-
-# showGame()
-
-# while not endGame:
-#     if playerturn:
-#         addToken()
-#         checkGame()
-#     else:
-#         addToken()
-#         checkGame()
-#     playerturn=not playerturn
-#     showGame()
-# if playerturn:
-#     print(f"{GREEN}Gratulacje, wygrałeś!{RESET}")
-# else:
-#     print(f"{RED}Wygrał komputer{RESET}")
 
 if __name__ == '__main__':
 
