@@ -16,3 +16,18 @@
 pip install -r requirements.txt
 
 Plik requirements.txt zawiera wszystkie potrzebne biblioteki, które są niezbędne do prawidłowego działania gry.
+
+## Przykładowa rozgrwyka:
+
+Dodawanie żetonu (ruch gracza):
+
+![screenshot](screenshots/dodawanie_ruchu.png)
+
+Wygrana gracza (poziom i skos):
+
+![screenshot](screenshots/wygrana_skos.png)
+
+Wygrana AI:
+
+![screenshot](screenshots/wygrana_AI.png)
+
