@@ -1,10 +1,17 @@
 """
+Daria Szabłowska - s24967
+Damian Grzesiak - s25866
+
+URUCHOMIENIE:
+Aby zainstalować potrzebne biblioteki należy wpisać komendę:
+pip install -r requirements.txt
+
+O GRZE:
 Connect4 to gra strategiczna dla dwóch graczy,
  którzy na przemian wrzucają swoje żetony do pionowej planszy złożonej z 7 kolumn i 6 rzędów.
  Celem gry jest ułożenie czterech swoich żetonów w jednej linii (pionowo, poziomo lub ukośnie).
 
-Zasady w skrócie:
-
+ZASADY:
 Dwóch graczy: Jeden gra żółtymi (u nas 1), drugi czerwonymi żetonami(u nas 2).
 Ruchy: Gracze na zmianę wrzucają po jednym żetonie do wybranej kolumny. Żeton opada na najniższe wolne miejsce w kolumnie.
 Zwycięstwo: Wygrywa ten, kto pierwszy ułoży cztery swoje żetony w jednej linii (poziomo, pionowo lub po przekątnej).
@@ -78,7 +85,14 @@ class MyGame(TwoPlayerGame):
         return False
 
     def check_direction(self,row,col,d_row,d_col):
-        """Sprawdzenie czy od danego punktu na planszy wytępują cztery żetony pod rząd"""
+        """Sprawdzenie czy od danego punktu na planszy wytępują cztery żetony pod rząd
+        
+        Keyword arguments:
+            row (int): Wiersz początkowy
+            col (int): Kolumna początkowa
+            d_row (int): Kierunek ruchu w wierszach 
+            d_col (int): Kierunek ruchu w kolumnach 
+        """
         tokens_in_row = 0
         player=self.board[row][col]
         for i in range(4):
@@ -102,6 +116,15 @@ class MyGame(TwoPlayerGame):
         return score
     
     def evaluate_position(self,row,col,d_row,d_col):
+        """Wyliczenie ilosci wolnych miejsc od danego żetonu (wg. rzędu, kolumny lub skosu) dla bieżącego gracza 
+        na podstawie żetonów rozłożonych na planszy
+
+        Keyword arguments:
+            row (int): Wiersz początkowy
+            col (int): Kolumna początkowa
+            d_row (int): Kierunek ruchu w wierszach 
+            d_col (int): Kierunek ruchu w kolumnach 
+        """
         score = 0
         tokens_in_row = 0
         empty = 0
@@ -127,6 +150,7 @@ class MyGame(TwoPlayerGame):
         return score
     
     def get_player_color(self, player):
+        """Dodanie kolorów do żetonów graczy"""
         if player == 1:
             return f"{YELLOW}{player}{RESET}"
         elif player == 2:
