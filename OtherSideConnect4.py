@@ -1,3 +1,17 @@
+"""
+Connect4 to gra strategiczna dla dwóch graczy,
+ którzy na przemian wrzucają swoje żetony do pionowej planszy złożonej z 7 kolumn i 6 rzędów.
+ Celem gry jest ułożenie czterech swoich żetonów w jednej linii (pionowo, poziomo lub ukośnie).
+
+Zasady w skrócie:
+
+Dwóch graczy: Jeden gra żółtymi (u nas 1), drugi czerwonymi żetonami(u nas 2).
+Ruchy: Gracze na zmianę wrzucają po jednym żetonie do wybranej kolumny. Żeton opada na najniższe wolne miejsce w kolumnie.
+Zwycięstwo: Wygrywa ten, kto pierwszy ułoży cztery swoje żetony w jednej linii (poziomo, pionowo lub po przekątnej).
+Remis: Jeśli plansza zostanie zapełniona, a żaden z graczy nie ułożył czterech żetonów, gra kończy się remisem.
+
+"""
+
 from easyAI import TwoPlayerGame, AI_Player,Human_Player,Negamax
 RED = '\033[31m'
 GREEN = '\033[32m'
@@ -83,11 +97,11 @@ class MyGame(TwoPlayerGame):
                 break
 
         if tokens_in_row==2 and empty>=2:
-            score+=10
+            score+=5
         elif tokens_in_row==3 and empty>=1:
-            score+=100
+            score+=50
         elif tokens_in_row==4:
-            score+=10000
+            score+=100000
         return score
 if __name__ == '__main__':
     human_player=Human_Player("Me")
