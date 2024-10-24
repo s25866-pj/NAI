@@ -13,43 +13,61 @@ Remis: Jeśli plansza zostanie zapełniona, a żaden z graczy nie ułożył czte
 """
 
 from easyAI import TwoPlayerGame, AI_Player,Human_Player,Negamax
+
 RED = '\033[31m'
 GREEN = '\033[32m'
 YELLOW = '\033[33m'
 RESET = '\033[0m'
 rows = 6
 cols = 7
+
 class MyGame(TwoPlayerGame):
+    
     def __init__(self, players):
+        """Inicjalizacja planszy 6x7, graczy oraz ustawienie obecnego gracza na 1"""
         self.players=players
         self.current_player = 1
         self.board = [[0 for i in range(cols)] for j in range(rows)]
+
     def possible_moves(self):
+        """Funkcja zwracąjaca wszystkie możliwe ruchy czyli liste pozostałych miejsc do zagrania żetonu"""
         move_list = []
         for column in range(cols):
             if self.board[0][column]==0:
                 move_list.append(column)
         return move_list
+    
     def unmake_move(self, move):
+        """Funkcja dzięki której AI ma możliwosc cofniecia ruchu - przyspiesza działanie"""
         col = int(move)
         for row in range(rows):
             if self.board[row][col]!=0:
                 self.board[row][col]=0
                 break
+
     def make_move(self, move):
+        """Wykonywanie ruchu gracza poprzez wpisanie odpowiednio przypisanego dla niego żetonu (1 lub 2) w odpowiedniej kolumnie - zależnie od gracza wykonuąjcego ruch"""
         col = int(move)
         for row in range(5,-1,-1):
             if self.board[row][col]==0:
                 self.board[row][col]=self.current_player
                 break
+
     def is_over(self):
+        """Sprawdzanie czy gra powinna sie juz zakończyc. Zwraca wartość true jeśli warunki którejś z metod board_is_full lub check_winner zostaną spełnione"""
         return self.board_is_full() or self.check_winner()
+    
     def show(self):
+        """Funkcja wypisująca biezaca plansze"""
         print("\n".join([" ".join([str(self.board[row][col]) for col in range(cols)]) for row in range(rows)]))
         print()
+
     def board_is_full(self):
+        """Sprawdzanie czy cala tablica zostala juz zapelniona"""
         return all(self.board[0][col] != 0 for col in range(cols))
+    
     def check_winner(self):
+        """Sprawdzanie wygranej w pionie, poziomie, na skos w prawo lub skos w lewo"""
         for row in range(rows):
             for col in range(cols):
                 if self.board[row][col]!=0 and (self.check_direction(row,col,1,0) or
@@ -60,6 +78,7 @@ class MyGame(TwoPlayerGame):
         return False
 
     def check_direction(self,row,col,d_row,d_col):
+        """Sprawdzenie czy od danego punktu na planszy wytępują cztery żetony pod rząd"""
         tokens_in_row = 0
         player=self.board[row][col]
         for i in range(4):
@@ -69,7 +88,9 @@ class MyGame(TwoPlayerGame):
             else:
                 break
         return tokens_in_row == 4
+    
     def scoring(self):
+        """Funkcja nadająca punkty za ruch dla AI - do oceny skuteczności ruchu"""
         score = 0
         for row in range(rows):
             for col in range(cols):
@@ -79,6 +100,7 @@ class MyGame(TwoPlayerGame):
                     score+=self.evaluate_position(row,col,1,1)
                     score+=self.evaluate_position(row,col,1,-1)
         return score
+    
     def evaluate_position(self,row,col,d_row,d_col):
         score = 0
         tokens_in_row = 0
@@ -103,6 +125,7 @@ class MyGame(TwoPlayerGame):
         elif tokens_in_row==4:
             score+=100000
         return score
+    
 if __name__ == '__main__':
     human_player=Human_Player("Me")
     ai_algo=Negamax(4)
