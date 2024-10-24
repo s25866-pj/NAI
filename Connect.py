@@ -14,6 +14,7 @@ endGame = False
 board = [[0 for _ in range(columns)] for _ in range(rows)]
 
 class ConnectGame(TwoPlayerGame):
+    #Tisuje tylko po to żeby wymusić aktualizcje
     
     def __init__(self, players):
         self.players = players
