@@ -59,7 +59,7 @@ class MyGame(TwoPlayerGame):
     
     def show(self):
         """Funkcja wypisująca biezaca plansze"""
-        print("\n".join([" ".join([str(self.board[row][col]) for col in range(cols)]) for row in range(rows)]))
+        print("\n".join([" ".join([str(self.get_player_color(self.board[row][col])) for col in range(cols)]) for row in range(rows)]))
         print()
 
     def board_is_full(self):
@@ -125,6 +125,15 @@ class MyGame(TwoPlayerGame):
         elif tokens_in_row==4:
             score+=100000
         return score
+    
+    def get_player_color(self, player):
+        if player == 1:
+            return f"{YELLOW}{player}{RESET}"
+        elif player == 2:
+            return f"{RED}{player}{RESET}"
+        else:
+            return player
+
     
 if __name__ == '__main__':
     human_player=Human_Player("Me")
