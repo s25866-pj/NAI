@@ -15,8 +15,11 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
+
 class ParkingSystem:
+
     def __init__(self):
+
         self.distance_left = ctrl.Antecedent(np.arange(0, 201, 1), 'distance_left')
         self.distance_right = ctrl.Antecedent(np.arange(0, 201, 1), 'distance_right')
         self.distance_back = ctrl.Antecedent(np.arange(0, 201, 1), 'distance_back')
@@ -29,8 +32,9 @@ class ParkingSystem:
 
     def _define_membership_functions(self):
 
+        """Definiowanie funkcji przynależności dla danych wejsciowych, zmiennych rozmytych i wyniku"""
+        
         # distance_left
-
         self.distance_left['crash'] = fuzz.trimf(self.distance_left.universe, [0, 0, 5])
         self.distance_left['close'] = fuzz.trimf(self.distance_left.universe, [5, 20, 50])
         self.distance_left['medium'] = fuzz.trimf(self.distance_left.universe, [20, 50, 100])
@@ -38,7 +42,6 @@ class ParkingSystem:
 
 
         # distance_right
-
         self.distance_right['crash'] = fuzz.trimf(self.distance_left.universe, [0, 0, 5])
         self.distance_right['close'] = fuzz.trimf(self.distance_right.universe, [5, 20, 50])
         self.distance_right['medium'] = fuzz.trimf(self.distance_right.universe, [20, 50, 100])
@@ -46,7 +49,6 @@ class ParkingSystem:
 
 
         # distance_back
-
         self.distance_back['crash'] = fuzz.trimf(self.distance_left.universe, [0, 0, 5])
         self.distance_back['close'] = fuzz.trimf(self.distance_back.universe, [5, 20, 50])
         self.distance_back['medium'] = fuzz.trimf(self.distance_back.universe, [20, 50, 100])
@@ -61,18 +63,21 @@ class ParkingSystem:
 
 
     def rule_bad(self):
+        """Tworzenie reguły rozmytej dla złej oceny parkowania"""
         return ctrl.Rule(
             (self.distance_left['close'] | self.distance_right['close'] | self.distance_back['close']),
             consequent=self.parking_status['bad']
         )
 
     def rule_perfect(self): 
+        """Tworzenie reguły rozmytej dla perfekcyjnej oceny parkowania"""
         return ctrl.Rule(
             (self.distance_left['medium'] & self.distance_right['medium'] & self.distance_back['medium']),
             consequent=self.parking_status['perfect']
         )
 
     def rule_average(self): 
+        """Tworzenie reguły rozmytej dla średniej oceny parkowania"""
         return ctrl.Rule(
             (self.distance_left['far'] & self.distance_right['far'] & self.distance_back['far']) |
             (self.distance_left['medium'] & self.distance_right['far'] & self.distance_back['medium']) |
@@ -84,6 +89,7 @@ class ParkingSystem:
         )
 
     def rule_crash(self): 
+        """Tworzenie reguły rozmytej dla najgorszej oceny parkowania - zderzenia z przeszkodą"""
         return ctrl.Rule(
             antecedent=(
                 (self.distance_left['crash']) | (self.distance_right['crash']) | (self.distance_back['crash'])
@@ -92,6 +98,15 @@ class ParkingSystem:
         )
 
     def get_parking_status(self, left, right, back):
+        """
+        Funkcja służąca do obliczenia statusu parkowania na podstawie wprowadzonych danych.
+        Parametry:
+            left (int): Odległość od przeszkody po lewej stronie pojazdu.
+            right (int): Odległość od przeszkody po prawej stronie pojazdu.
+            back (int): Odległość od przeszkody z tyłu pojazdu.
+        Output:
+            Obliczony status parkowania, zaokrąglony do pierwszej liczby po przecinku.
+        """
 
         self.parking_status_sim.input['distance_left'] = left
         self.parking_status_sim.input['distance_right'] = right
@@ -102,6 +117,7 @@ class ParkingSystem:
         return round(self.parking_status_sim.output['parking_status'], 1)
 
     def show_parking_status_plot(self):
+        """Wyświetlanie wyników na wykresie"""
         
         self.parking_status.view(sim=self.parking_status_sim)
         plt.show()
