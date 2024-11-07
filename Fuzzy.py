@@ -7,8 +7,8 @@ Aby zainstalować potrzebne biblioteki należy wpisać komendę:
 pip install -r requirements.txt
 
 O PROJEKCIE:
-Jest to projekt służący do oceny parkowania auta, na podstawie wykrytych przez czujniki odległości od przeszkód.
-
+Projekt służy do oceny parkowania auta, na podstawie wykrytych przez czujniki odległości od przeszkód. 
+Głównym zadaniem programu jest analiza odległości w celu określenia, czy pojazd zaparkował bezpiecznie, z ryzykiem kolizji, lub czy został zaparkowany idealnie.
 """
 
 import numpy as np
@@ -19,6 +19,10 @@ import matplotlib.pyplot as plt
 class ParkingSystem:
 
     def __init__(self):
+        """
+        Inicjalizacja zmiennych wejściowych i wyjściowych do działania w fuzzy. Wywołanie tworzenia funkcji przynależności. 
+        Stworzenie zasad oraz systemu kontroli i systemu symulacji.
+        """
 
         self.distance_left = ctrl.Antecedent(np.arange(0, 201, 1), 'distance_left')
         self.distance_right = ctrl.Antecedent(np.arange(0, 201, 1), 'distance_right')
@@ -32,7 +36,7 @@ class ParkingSystem:
 
     def _define_membership_functions(self):
 
-        """Definiowanie funkcji przynależności dla danych wejsciowych, zmiennych rozmytych i wyniku"""
+        """Definiowanie funkcji przynależności oraz ich zakresów dla danych wejsciowych, zmiennych rozmytych i wyniku"""
         
         # distance_left
         self.distance_left['crash'] = fuzz.trimf(self.distance_left.universe, [0, 0, 5])
@@ -65,7 +69,7 @@ class ParkingSystem:
     def rule_bad(self):
         """Tworzenie reguły rozmytej dla złej oceny parkowania"""
         return ctrl.Rule(
-             (self.distance_left['close'] & self.distance_right['medium'] & self.distance_back['medium']) |
+            (self.distance_left['close'] & self.distance_right['medium'] & self.distance_back['medium']) |
             (self.distance_left['medium'] & self.distance_right['close'] & self.distance_back['medium']) |
             (self.distance_left['medium'] & self.distance_right['medium'] & self.distance_back['close']) |
             (self.distance_left['close'] & self.distance_right['far'] & self.distance_back['far']) |
@@ -129,6 +133,14 @@ class ParkingSystem:
         plt.show()
 
 def main():
+    """
+    Główny przebieg programu.
+
+    Stworzenie parking system
+    Przyjęcie danych od użytkownika
+    Obliczenie statusu parkowania
+    Wyświetlenie wyniku wraz z wykresem
+    """
 
     parking_system = ParkingSystem()
 
