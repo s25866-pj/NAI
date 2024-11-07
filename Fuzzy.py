@@ -65,7 +65,14 @@ class ParkingSystem:
     def rule_bad(self):
         """Tworzenie reguły rozmytej dla złej oceny parkowania"""
         return ctrl.Rule(
-            (self.distance_left['close'] | self.distance_right['close'] | self.distance_back['close']),
+             (self.distance_left['close'] & self.distance_right['medium'] & self.distance_back['medium']) |
+            (self.distance_left['medium'] & self.distance_right['close'] & self.distance_back['medium']) |
+            (self.distance_left['medium'] & self.distance_right['medium'] & self.distance_back['close']) |
+            (self.distance_left['close'] & self.distance_right['far'] & self.distance_back['far']) |
+            (self.distance_left['far'] & self.distance_right['close'] & self.distance_back['far']) |
+            (self.distance_left['far'] & self.distance_right['far'] & self.distance_back['close']) |
+            (self.distance_left['close'] & self.distance_right['far'] & self.distance_back['far']) |
+            (self.distance_left['close'] & self.distance_right['close'] & self.distance_back['close']),
             consequent=self.parking_status['bad']
         )
 
@@ -91,9 +98,8 @@ class ParkingSystem:
     def rule_crash(self): 
         """Tworzenie reguły rozmytej dla najgorszej oceny parkowania - zderzenia z przeszkodą"""
         return ctrl.Rule(
-            antecedent=(
-                (self.distance_left['crash']) | (self.distance_right['crash']) | (self.distance_back['crash'])
-            ),
+            antecedent=
+            (self.distance_left['crash'] | self.distance_right['crash'] | self.distance_back['crash']),
             consequent=self.parking_status['crashh']
         )
 
