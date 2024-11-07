@@ -111,7 +111,7 @@ clock = pygame.time.Clock()
 obstacle1_rect = pygame.Rect(0, 0, 100, 120)
 obstacle2_rect = pygame.Rect(200, 0, 100, 120)
 parking_rect = pygame.Rect(100, 0, 100, 120)
-
+#/
 car = Car()
 manual_mode = True  # Start w trybie ręcznym
 running = True
