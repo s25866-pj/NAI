@@ -52,7 +52,6 @@ def getMovieDetails(film):
         "apikey": api_key  # Twój klucz API
     }
     try:
-
         # Wysyłanie żądania do API
         response = requests.get(base_url, params=params)
         # Sprawdzenie statusu HTTP
@@ -61,7 +60,7 @@ def getMovieDetails(film):
 
             # Sprawdzenie, czy API zwraca dane
             if data.get("Response") == "True":
-                print("Pełna odpowiedź z API:")
+                #print("Pełna odpowiedź z API:")
                 print("Tytuł: "+data["Title"])
                 print("Czas Trwania: "+data["Runtime"])
                 print("opis (język ang): "+data["Plot"])
@@ -78,68 +77,97 @@ def getMovieDetails(film):
         return None
 
 
-def main():
+def searchRecommendation(provided_user,extra_info):
     ratings_file = './data.json'
+    print("osoba")
+    with open(ratings_file, 'r') as f:
+        json_data = json.load(f)
 
-    provided_user = input("Podaj osobę dla ktorej chcesz otrzymac listę poleconych filmow (imie i nazwisko BEZ POLSKICH ZNAKOW) lub info <tytuł>: ")
-    if provided_user.lower().startswith("info") and "<" in provided_user and ">" in provided_user:
-        start = provided_user.find("<") + 1  # Znajdź pozycję znaku "<" i przesuwamy o 1
-        end = provided_user.find(">", start)  # Znajdź pierwsze ">" po "<"
-        film =provided_user[start:end]  # Wyciągamy tekst pomiędzy "<" i ">"
-        getMovieDetails(film)
-    elif len(provided_user.split()) == 2 and all(part.isalpha() and part[0].isupper() for part in provided_user.split()):
-        print("osoba")
-        with open(ratings_file, 'r') as f:
-            json_data = json.load(f)
+    person_score = RecommendedMovie()
 
-        person_score = RecommendedMovie()
+    best_match = None
+    best_score = -1
+    recomended_user_movies = []
 
-        best_match = None
-        best_score = -1
-        recomended_user_movies = []
+    for user2 in json_data:
+        if provided_user != user2:
+            score = person_score.pearson_correlation_score(json_data, provided_user, user2)
+            print(f"Wynik między {provided_user} a {user2}: {score}")
+            if score > best_score:
+                best_score = score
+                best_match = user2
 
+    print("_______________________________________:")
+    print(f"Polecane filmy dla {provided_user}:")
 
-        for user2 in json_data:
-                if provided_user != user2:
-                    score = person_score.pearson_correlation_score(json_data, provided_user, user2)
-                    print(f"Wynik między {provided_user} a {user2}: {score}")
-                    if score > best_score:
-                        best_score = score
-                        best_match = user2
+    if best_match:
+        print(f"Najlepszy wynik z uzytkownikem {best_match} {best_score}")
 
-        print("_______________________________________:")
-        print(f"Polecane filmy dla {provided_user}:")
+        provided_user_movies = set(json_data[provided_user].keys())
 
+        # DO USUNIECIA W WERSJI KONCOWEJ - TEST
+        # print(f"FILMY PODANEGO USERA: {provided_user_movies}")
 
-        if best_match:
-            print(f"Najlepszy wynik z uzytkownikem {best_match} {best_score}")
+        best_user_movies = {
+            movie: rating
+            for movie, rating in json_data[best_match].items()
+            if movie not in provided_user_movies
+        }
 
-            provided_user_movies = set(json_data[provided_user].keys())
+        # DO USUNIECIA W WERSJI KONCOWEJ - TEST
+        # Na ten moment jesli najlepszy wynik sie powtarza to przypisuje tylko jednego usera -
+        # DO DODANIA - spisywanie najlepszych filmow z kilku list jesli najlepszy wynik jest do kolku osob
+        # print(f"FILMY DOPASOWANEGO USERA: {best_user_movies}")
 
-            #DO USUNIECIA W WERSJI KONCOWEJ - TEST
-            #print(f"FILMY PODANEGO USERA: {provided_user_movies}")
+        # Sortujemy malejąco i wybieramy 5 najlepszych
+        top_movies = sorted(best_user_movies.items(), key=lambda x: x[1], reverse=True)[:5]
 
-            best_user_movies = {
-                movie: rating
-                for movie, rating in json_data[best_match].items()
-                if movie not in provided_user_movies
-            }
-
-            #DO USUNIECIA W WERSJI KONCOWEJ - TEST
-            #Na ten moment jesli najlepszy wynik sie powtarza to przypisuje tylko jednego usera -
-            # DO DODANIA - spisywanie najlepszych filmow z kilku list jesli najlepszy wynik jest do kolku osob
-            #print(f"FILMY DOPASOWANEGO USERA: {best_user_movies}")
-
-            # Sortujemy malejąco i wybieramy 5 najlepszych
-            top_movies = sorted(best_user_movies.items(), key=lambda x: x[1], reverse=True)[:5]
-
-            print("Polecane filmy od użytkownika z najlepszym wynikiem:")
-            for movie, rating in top_movies:
+        print("Polecane filmy od użytkownika z najlepszym wynikiem:")
+        for movie, rating in top_movies:
+            if extra_info:
+                getMovieDetails(movie)
+                print(f": {rating}")
+            else:
                 print(f"{movie} - Ocena: {rating}")
-        else:
-            print("Nie znaleziono użytkownika z którym można by porównać.")
+
+    else:
+        print("Nie znaleziono użytkownika z którym można by porównać.")
 
 
-
+def my_help():
+    text = """
+    name sname -i information about a recomended movie
+    name sname -w information about a worst recomended movie
+    -i information about program creation
+    """
+    print(text)
+    pass
+def information():
+    text ="""
+    Software to recomend movies
+    creators:
+    Daria Szabłowska
+    Damian Grzesiak
+    """
+    print(text)
+    pass
+def main():
+    provided_user = input("Podaj osobę dla ktorej chcesz otrzymac listę poleconych filmow (imie i nazwisko BEZ POLSKICH ZNAKOW) lub info <tytuł>: ")
+    if provided_user[0]=="-":
+     if provided_user[1]=="h":
+         my_help()
+     elif provided_user[1]=="i":
+         information()
+    else:
+        if provided_user.lower().startswith("info") and "<" in provided_user and ">" in provided_user:
+            start = provided_user.find("<") + 1  # Znajdź pozycję znaku "<" i przesuwamy o 1
+            end = provided_user.find(">", start)  # Znajdź pierwsze ">" po "<"
+            film =provided_user[start:end]  # Wyciągamy tekst pomiędzy "<" i ">"
+            getMovieDetails(film)
+        elif len(provided_user.split()) == 2 and all(part.isalpha() and part[0].isupper() for part in provided_user.split()):
+            searchRecommendation(provided_user,False)
+        elif provided_user[-2:] =="-i":
+            provided_user = provided_user[:-3]
+            searchRecommendation(provided_user, True)
 if __name__ == '__main__':
     main()
