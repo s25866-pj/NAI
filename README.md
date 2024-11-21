@@ -1,4 +1,5 @@
 # URUCHOMIENIE
+API KEY ZOSTAŁ PODANY MAILOWO!
 
 ABY URUCHOMIĆ PROGRAM NALEŻY:
 Pobrać pliki movie_recommendations.py, data.json oraz requirements.txt.
