@@ -21,7 +21,7 @@ Program zawiera kilka funkcji - po wpisaniu odpowiednich komend:
 
     7. INPUT: -w - wychodzi z programu
 
-    8. INPUT: -i
+    8. INPUT: -i - podaje informacje o programie
 
 ABY URUCHOMIĆ NALEŻY:
 Pobrać pliki movie_recommendations.py, data.json oraz requirements.txt.
@@ -29,6 +29,8 @@ Zainstalować wymagane biblioteki, korzystając z pliku requirements.txt. W tym 
 pip install -r requirements.txt
 
 Plik requirements.txt zawiera wszystkie potrzebne biblioteki, które są niezbędne do prawidłowego działania programu
+
+Do zmiennej api_key przypisać API KEY podany na mailu
 """
 
 import json
