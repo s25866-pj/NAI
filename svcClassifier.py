@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
 
-class BanknoteClassifier:
+class SvcClassifier:
     def __init__(self, X_train, X_test, y_train, y_test):
         """
         Inicjalizacja klasyfikatora
