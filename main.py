@@ -89,16 +89,23 @@ def main():
     dt_classifier.train()
     dt_classifier.evaluate()
 
-    print("\nVisualizing Data:")
-    # Wykres liniowy
-    sns.lineplot(data=x, x=x.columns[0], y=x.columns[1], hue=y)
-    plt.title("Line Plot")
-    plt.show()
+    # Wizualizacja danych
+    if choice == "1":
+        print("\nVisualizing Data:")
+        sns.pairplot(x.assign(Class=y), hue='Class', diag_kind='kde')
+        plt.show()
 
-    # Histogram
-    sns.histplot(data=x, x=x.columns[0], hue=y, kde=True)
-    plt.title("Histogram")
-    plt.show()
+    if choice == "2":
+        print("\nVisual`izing Data:")
+        # Wykres liniowy
+        sns.lineplot(data=x, x=x.columns[0], y=x.columns[1], hue=y)
+        plt.title("Line Plot")
+        plt.show()
+
+        # Histogram
+        sns.histplot(data=x, x=x.columns[0], hue=y, kde=True)
+        plt.title("Histogram")
+        plt.show()
 
     sample_inputs = x.sample(5, random_state=np.random.RandomState())  # 5 randomowych 
     print("\nSample Inputs:")
