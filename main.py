@@ -88,10 +88,16 @@ def main():
     dt_classifier = DecTreeClassifier(X_train, X_test, y_train, y_test)
     dt_classifier.train()
     dt_classifier.evaluate()
-    
-    # Wizualizacja danych
+
     print("\nVisualizing Data:")
-    sns.pairplot(x.assign(Class=y), hue='Class', diag_kind='kde')
+    # Wykres liniowy
+    sns.lineplot(data=x, x=x.columns[0], y=x.columns[1], hue=y)
+    plt.title("Line Plot")
+    plt.show()
+
+    # Histogram
+    sns.histplot(data=x, x=x.columns[0], hue=y, kde=True)
+    plt.title("Histogram")
     plt.show()
 
     sample_inputs = x.sample(5, random_state=np.random.RandomState())  # 5 randomowych 
