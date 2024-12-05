@@ -1,3 +1,20 @@
+"""Autorzy:
+Daria Szabłowska s24967
+Damian Grzesiak s25886
+
+O projekcie:
+Projekt klasyfikuje dane za pomocą dwóch różnych modeli uczenia maszynowego: 
+maszyny wektorów nośnych (SVM) i drzewa decyzyjnego. Umożliwia użytkownikowi wybór 
+jednego z dwóch zbiorów danych (rozróżniania banknotów oraz zwolnień pracowników), następnie przetwarza te dane, 
+trenuje modele, ocenia ich dokładność oraz wizualizuje wyniki. 
+
+ABY URUCHOMIĆ PROGRAM NALEŻY: 
+Pobrać pliki znajdujące się na repozytorium (branch LAB4). 
+Zainstalować wymagane biblioteki, korzystając z pliku requirements.txt. 
+W tym celu używając poniższej komendy w terminalu: pip install -r requirements.txt
+"""
+
+
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 import seaborn as sns
@@ -11,7 +28,7 @@ from decisionTreeClassifier import DecTreeClassifier
 def load_employee_data(filepath="./Employee.csv"):
     """
     Wczytuje dane z pliku Employee.csv.
-    Zakładamy, że ostatnia kolumna to etykieta klasy.
+    Ostatnia kolumna to etykieta, a pozostałe to cechy.
     """
     data = pd.read_csv(filepath)
     x = data.iloc[:, :-1]  # Wszystkie kolumny poza ostatnią jako cechy
@@ -25,7 +42,7 @@ def load_employee_data(filepath="./Employee.csv"):
 
 def load_banknote_data():
     """
-    Wczytuje dane z datasetu Banknote Authentication (UCIML).
+    Wczytuje dane z datasetu Banknote Authentication.
     """
     banknote_authentication = fetch_ucirepo(id=267)
     x = banknote_authentication.data.features
@@ -33,6 +50,15 @@ def load_banknote_data():
     return x, y
 
 def main():
+    """Główna funkcja programu:
+        Pozwala użytkownikowi wybrać jeden z dwóch zbiorów danych:
+        - Banknote Authentication Dataset.
+        - Employee Dataset.
+        Trenuje SVM i Drzewo Decyzyjne
+        Ocenia wydajność obu modeli
+        Wizualizuje dane za pomocą biblioteki Seaborn
+        Dokonuje predykcji 
+    """
     print("Wybierz dataset do analizy:")
     print("1: Banknote Authentication")
     print("2: Employee Data")

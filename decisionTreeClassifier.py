@@ -8,10 +8,11 @@ class DecTreeClassifier:
         """
         Inicjalizacja klasyfikatora
         
-        X_train
-        X_test
-        y_train
-        y_test
+        Parametry:
+            X_train - cechy dla danych treningowych
+            X_test - ceychy dla danych testowych
+            y_train - etykiety (wyniki) dla danych treningowych
+            y_test - etykiety (wyniki) dla danych testowych
         """
 
         self.X_train = X_train
@@ -21,7 +22,7 @@ class DecTreeClassifier:
         self.decissionTree_clf = DecisionTreeClassifier(random_state=42)
     
     def train(self):
-        """Trenuje model SVM na treningowych danych"""
+        """Trenuje model drzewa decyzyjnego na danych treningowych"""
         self.decissionTree_clf.fit(self.X_train, self.y_train)
     
     def evaluate(self):
