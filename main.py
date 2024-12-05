@@ -1,4 +1,5 @@
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -7,13 +8,45 @@ from ucimlrepo import fetch_ucirepo
 from svcClassifier import SvcClassifier
 from decisionTreeClassifier import DecTreeClassifier
 
-def main():
-    # Fetch dataset z UCIML
+def load_employee_data(filepath="./Employee.csv"):
+    """
+    Wczytuje dane z pliku Employee.csv.
+    Zakładamy, że ostatnia kolumna to etykieta klasy.
+    """
+    data = pd.read_csv(filepath)
+    x = data.iloc[:, :-1]  # Wszystkie kolumny poza ostatnią jako cechy
+    y = data.iloc[:, -1]   # Ostatnia kolumna jako etykieta
+    column_names = x.columns
+    enc = preprocessing.OrdinalEncoder() # Inicjalizacja klasy enkodera z sklearn
+    x = enc.fit_transform(x) # Przekonwertowanie danych tekstowych (kategorie) na ich odpowiednik wartości int
+    x = pd.DataFrame(data=x, columns=column_names)
+
+    return x, y
+
+def load_banknote_data():
+    """
+    Wczytuje dane z datasetu Banknote Authentication (UCIML).
+    """
     banknote_authentication = fetch_ucirepo(id=267)
-    
-    # Dane jako pandas dataframes
     x = banknote_authentication.data.features
     y = banknote_authentication.data.targets
+    return x, y
+
+def main():
+    print("Wybierz dataset do analizy:")
+    print("1: Banknote Authentication")
+    print("2: Employee Data")
+    choice = input("Twój wybór (1/2): ").strip()
+
+    if choice == "1":
+        print("\nWybrano: Banknote Authentication Dataset")
+        x, y = load_banknote_data()
+    elif choice == "2":
+        print("\nWybrano: Employee Dataset")
+        x, y = load_employee_data()
+    else:
+        print("Niepoprawny wybór. Kończenie programu.")
+        return
     
     # Podział danych na treningowe i testowe
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42, stratify=y)
