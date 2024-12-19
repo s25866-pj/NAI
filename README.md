@@ -16,10 +16,15 @@ Projekt zawiera dwa oddzielne programy:
 
 # PRZYKŁADOWE WYWOŁANIE PROGRAMU CIFAR10
 
-![screenshot](screenshots/image.png)
+![screenshot](screenshots/image3.png)
 <br></br>
-![screenshot](screenshots/image2.png)
+![screenshot](screenshots/image4.png)
+<br></br>
+![screenshot](screenshots/image5.png)
 
 
 # PRZYKŁADOWE WYWOŁANIE PROGRAMU BANKNOTE AUTHENTICATION
 
+![screenshot](screenshots/image.png)
+<br></br>
+![screenshot](screenshots/image2.png)
