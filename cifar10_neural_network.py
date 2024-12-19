@@ -1,6 +1,8 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from keras import datasets, layers, models
+from keras import preprocessing
+import numpy as np
 
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 
@@ -34,3 +36,20 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 history = model.fit(train_images, train_labels, epochs=10, validation_data=(test_images, test_labels))
+
+def predict_image(img_path):
+    img = preprocessing.image.load_img(img_path, target_size=(32, 32))
+    img_array = preprocessing.image.img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    predictions = model.predict(img_array)
+    predicted_class = class_names[np.argmax(predictions)]
+    plt.imshow(img)
+    plt.title(f'Predicted: {predicted_class}')
+    plt.axis('off')
+    plt.show()
+
+img_path = 'C:/Users/daria/Documents/studia/NAI/NAI/zaba.jpg'
+predict_image(img_path)
+
+
+
