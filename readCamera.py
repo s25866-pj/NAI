@@ -2,12 +2,44 @@ import cv2
 import mediapipe as mp
 import webbrowser
 
+"""
+Autorzy:
+Daria Szabłowska s24967
+Damian Grzesiak s25866
+
+Aby uruchomić program należy:
+Zainstalować wymagane biblioteki, korzystając z pliku requirements.txt.
+W tym celu używając poniższej komendy w terminalu: pip install -r requirements.txt
+
+Program służy do rozpoznawania gestów wykonywanych przed kamerą przy użyciu biblioteki MediaPipe. 
+Rozpoznawane gesty wywołują różne działania, takie jak:
+- mały palec - zatrzymanie porgramu
+- duży palec - otwarcie przeglądarki
+- palec wskazujący - zamnknięcie programu
+- otwarta dłoń - wyświetla na ekranie informację, że pokazany gest to otwarta dłoń
+"""
+
 # Inicjalizacja modułu MediaPipe dla rąk
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils
 
 def gesture_recognition(hand_landmarks):
+    """Funkcja do rozpoznawania gestów na podstawie punktów kluczowych u dłoni
+         Argumenty:
+        -----------
+        hand_landmarks
+
+        OUTPUT:
+        --------
+        Nazwa rozpoznanego gestu:
+        - "Thumbs up" (kciuk uniesiony)
+        - "Index finger up" (palec wskazujący uniesiony)
+        - "Little finger up" (mały palec uniesiony)
+        - "Open hand" (otwarta dłoń)
+        - None (jeśli gest nie został rozpoznany)
+    """
+
     # Górne punkty palców u dłoni
     PUNKT_KCIUK = 4
     PUNKT_WSKAZUJACY = 8
